@@ -1,21 +1,13 @@
 const { Router } = require("express");
-const faker = require("faker");
+
+const ProductsService = require("../services/products.service");
 
 const router = Router();
+const service = new ProductsService();
 
 // enviando json
 router.get("/", (req, res) => {
-  const products = [];
-  const { size } = req.query;
-  const limit = size || 10;
-  // generando informacion aleatoria
-  for (let index = 0; index < limit; index++) {
-    products.push({
-      name: faker.commerce.productName(),
-      price: parseInt(faker.commerce.price(), 10),
-      image: faker.image.imageUrl(),
-    });
-  }
+  const products = service.find();
   res.json(products);
 });
 
@@ -30,36 +22,35 @@ router.get("/filter", (req, res) => {
 // Dinámico
 router.get("/:id", (req, res) => {
   const { id } = req.params; // obteniendo los parametros
-  res.json({
-    id,
-    name: "Product 2",
-    price: 10000,
-  });
+  const product = service.findOne(id);
+  res.json(product);
 });
 
 router.post("/", (req, res) => {
   const body = req.body;
+  const newProduct = service.create(body);
   res.status(201).json({
     message: "Created",
-    data: body,
+    data: newProduct,
   });
 });
 
 router.patch("/:id", (req, res) => {
   const { id } = req.params;
   const body = req.body;
+  const product = service.update(id, body);
   res.json({
     message: "Updated",
-    id,
-    data: body,
+    product,
   });
 });
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
+  const rta = service.delete(id);
   res.json({
     message: "Deleted",
-    id,
+    rta,
   });
 });
 
