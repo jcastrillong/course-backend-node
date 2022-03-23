@@ -8,15 +8,15 @@ const service = new UsersService();
 /* Tipo query
   * son parámetros opcionales, en el navegador se usan 
   de la sigte manera "/users?limit=10&offset=200" */
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const { limit, offset } = req.query;
-  const data = service.find(limit, offset);
+  const data = await service.find(limit, offset);
   res.json(data);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const user = service.findOne(id);
+  const user = await service.findOne(id);
   res.json(user);
 })
 

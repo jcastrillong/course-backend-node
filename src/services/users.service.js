@@ -17,7 +17,7 @@ class UsersService {
     }
   }
 
-  find(limit, offset) {
+  async find(limit, offset) {
     if (limit && offset) {
       return this.usersList;
     } else {
@@ -25,7 +25,7 @@ class UsersService {
     }
   }
 
-  findOne(id) {
+  async findOne(id) {
     return this.usersList.find((item) => item.id === id);
   }
 }

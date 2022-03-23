@@ -19,31 +19,36 @@ class ProductsService {
     }
   }
 
-  create(data) {
+  async create(data) {
     const newProduct = { id: faker.datatype.uuid(), ...data };
     this.productsList.push(newProduct);
     return newProduct;
   }
 
   find() {
-    return this.productsList;
+    // Emulando
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.productsList);
+      }, 3000);
+    });
   }
 
-  findOne(id) {
+  async findOne(id) {
     return this.productsList.find((item) => item.id === id);
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.productsList.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error("Product not found");
     }
-    const product = this.productsList[index]
-    this.productsList[index] = { ...product, ...changes};
+    const product = this.productsList[index];
+    this.productsList[index] = { ...product, ...changes };
     return this.productsList[index];
   }
 
-  delete(id) {
+  async delete(id) {
     const index = this.productsList.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error("Product not found");
