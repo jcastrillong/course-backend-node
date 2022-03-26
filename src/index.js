@@ -2,6 +2,7 @@
 const express = require("express");
 
 const routerApi = require("./routes");
+const { logErrors, errorHandler } = require("../middlewares/error.handler");
 
 // Crear la app, con el constructor de express
 const app = express();
@@ -12,6 +13,10 @@ app.use(express.json());
 
 // -----------
 routerApi(app);
+
+// hay que tener en cuenta el orden de los middlewares
+app.use(logErrors);
+app.use(errorHandler);
 
 // Iniciando el servidor, colocandolo a escuchar en un puerto
 app.listen(port, () => {

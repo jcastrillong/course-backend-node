@@ -20,10 +20,14 @@ router.get("/filter", (req, res) => {
  * Tipo params
  * Solo un parámetro => "/nameRoute/:param" */
 // Dinámico
-router.get("/:id", async (req, res) => {
-  const { id } = req.params; // obteniendo los parametros
-  const product = await service.findOne(id);
-  res.json(product);
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params; // obteniendo los parametros
+    const product = await service.findOne(id);
+    res.json(product);
+  } catch (e) {
+    next(e);
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -36,16 +40,18 @@ router.post("/", async (req, res) => {
 });
 
 router.patch("/:id", async (req, res) => {
-  try {const { id } = req.params;
-  const body = req.body;
-  const product = await service.update(id, body);
-  res.json({
-    message: "Updated",
-    product,
-  });} catch(e) {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const product = await service.update(id, body);
+    res.json({
+      message: "Updated",
+      product,
+    });
+  } catch (e) {
     res.status(404).json({
       message: e.message,
-    })
+    });
   }
 });
 
