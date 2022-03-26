@@ -1,4 +1,5 @@
 const faker = require("faker");
+const boom = require("@hapi/boom");
 
 class ProductsService {
   constructor() {
@@ -15,6 +16,7 @@ class ProductsService {
         name: faker.commerce.productName(),
         price: parseInt(faker.commerce.price(), 10),
         image: faker.image.imageUrl(),
+        isBlock: faker.random.boolean(),
       });
     }
   }
@@ -35,14 +37,20 @@ class ProductsService {
   }
 
   async findOne(id) {
-    const name = this.getTotal();
-    return this.productsList.find((item) => item.id === id);
+    const product = this.productsList.find((item) => item.id === id);
+    if(!product) {
+      throw boom.notFound("Product not found");
+    }
+    if(product.isBlock) {
+      throw boom.forbidden("Product is blocked");
+    }
+    return product;
   }
 
   async update(id, changes) {
     const index = this.productsList.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
     const product = this.productsList[index];
     this.productsList[index] = { ...product, ...changes };
@@ -52,7 +60,7 @@ class ProductsService {
   async delete(id) {
     const index = this.productsList.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
     this.productsList.splice(index, 1);
     return { message: "Deleted", id };
