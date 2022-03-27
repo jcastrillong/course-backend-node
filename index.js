@@ -1,5 +1,6 @@
 // Requerir librerias y frameworks
 const express = require("express");
+const cors = require("cors");
 
 const routerApi = require("./routes");
 const {
@@ -10,10 +11,11 @@ const {
 
 // Crear la app, con el constructor de express
 const app = express();
-const port = 3000; // Definiendo un puerto donde correrá el servidor
+const port = process.env.PORT || 3000; // Definiendo un puerto donde correrá el servidor
 
 // Middlewares
 app.use(express.json());
+app.use(cors());
 
 // -----------
 routerApi(app);
