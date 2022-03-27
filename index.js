@@ -6,7 +6,7 @@ const {
   logErrors,
   errorHandler,
   boomErrorHandler,
-} = require("../middlewares/error.handler");
+} = require("./middlewares/error.handler");
 
 // Crear la app, con el constructor de express
 const app = express();

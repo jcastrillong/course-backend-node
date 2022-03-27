@@ -1,6 +1,7 @@
 const { Router } = require("express");
 
 const ProductsService = require("../services/products.service");
+const validatorHandler = require("../middlewares/validator.handler");
 
 const router = Router();
 const service = new ProductsService();
@@ -53,13 +54,17 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  const rta = service.delete(id);
-  res.json({
-    message: "Deleted",
-    rta,
-  });
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const rta = await service.delete(id);
+    res.json({
+      message: "Deleted",
+      rta,
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 
 module.exports = router;
