@@ -2,11 +2,16 @@ const faker = require("faker");
 const boom = require("@hapi/boom");
 
 const getConnection = require("../libs/postgres");
+const pool = require("../libs/postgres.pool");
 
 class ProductsService {
   constructor() {
     this.productsList = [];
     this.generate();
+    this.pool = pool;
+    this.pool.on("error", (err) => {
+      console.error("Error en la conexión", err);
+    });
   }
 
   generate() {
@@ -24,45 +29,34 @@ class ProductsService {
   }
 
   async create(data) {
-    const newProduct = { id: faker.datatype.uuid(), ...data };
-    this.productsList.push(newProduct);
-    return newProduct;
+    const query = `INSERT INTO tasks (t_name, description) VALUES ('${data.t_name}', '${data.description}')`;
+    const product = await this.pool.query(query);
+
+    return product.rows[0];
   }
 
   async find() {
-    const client = await getConnection();
-    const products = await client.query("SELECT * FROM tasks");
+    const query = 'SELECT * FROM tasks';
+    const products = await this.pool.query(query);
     return products.rows;
   }
 
   async findOne(id) {
-    const product = this.productsList.find((item) => item.id === id);
-    if(!product) {
-      throw boom.notFound("Product not found");
-    }
-    if(product.isBlock) {
-      throw boom.forbidden("Product is blocked");
-    }
-    return product;
+    const query = `SELECT * FROM tasks WHERE id = '${id}'`;
+    const product = await this.pool.query(query);
+    return product.rows[0];
   }
 
   async update(id, changes) {
-    const index = this.productsList.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound("Product not found");
-    }
-    const product = this.productsList[index];
-    this.productsList[index] = { ...product, ...changes };
-    return this.productsList[index];
+    const query = `UPDATE tasks SET name = '${changes.name}' WHERE id = '${id}'`;
+    const product = await this.pool.query(query);
+    return product.rows[0];
   }
 
   async delete(id) {
-    const index = this.productsList.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound("Product not found");
-    }
-    this.productsList.splice(index, 1);
-    return { message: "Deleted", id };
+    const query = `DELETE FROM tasks WHERE id = '${id}'`;
+    const product = await this.pool.query(query);
+    return product.rows[0];
   }
 }
 
