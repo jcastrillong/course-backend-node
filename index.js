@@ -7,6 +7,7 @@ const {
   logErrors,
   errorHandler,
   boomErrorHandler,
+  ormErrorHandler,
 } = require("./middlewares/error.handler");
 
 // Crear la app, con el constructor de express
@@ -27,6 +28,7 @@ routerApi(app);
 
 // hay que tener en cuenta el orden de los middlewares
 app.use(logErrors);
+app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
