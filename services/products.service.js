@@ -1,6 +1,8 @@
 const faker = require("faker");
 const boom = require("@hapi/boom");
 
+const getConnection = require("../libs/postgres");
+
 class ProductsService {
   constructor() {
     this.productsList = [];
@@ -27,13 +29,10 @@ class ProductsService {
     return newProduct;
   }
 
-  find() {
-    // Emulando
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.productsList);
-      }, 3000);
-    });
+  async find() {
+    const client = await getConnection();
+    const products = await client.query("SELECT * FROM tasks");
+    return products.rows;
   }
 
   async findOne(id) {
