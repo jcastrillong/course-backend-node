@@ -9,8 +9,7 @@ const service = new UsersService();
   * son parámetros opcionales, en el navegador se usan 
   de la sigte manera "/users?limit=10&offset=200" */
 router.get("/", async (req, res) => {
-  const { limit, offset } = req.query;
-  const data = await service.find(limit, offset);
+  const data = await service.find();
   res.json(data);
 });
 

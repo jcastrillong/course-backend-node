@@ -1,5 +1,7 @@
 const faker = require("faker");
 
+const { models } = require("./../libs/sequelize");
+
 class UsersService {
   constructor() {
     this.usersList = [];
@@ -17,12 +19,9 @@ class UsersService {
     }
   }
 
-  async find(limit, offset) {
-    if (limit && offset) {
-      return this.usersList;
-    } else {
-      return "No hay parámetros";
-    }
+  async find() {
+    const users = await models.User.findAll();
+    return users;
   }
 
   async findOne(id) {
