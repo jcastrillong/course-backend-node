@@ -6,15 +6,22 @@ const {
   createProductSchema,
   updateProductSchema,
   getProductSchema,
+  queryProductSchema,
 } = require("../schemas/products.schema");
 
 const router = Router();
 const service = new ProductsService();
 
 // enviando json
-router.get("/", async (req, res) => {
-  const products = await service.find();
-  res.json(products);
+router.get("/", 
+  validatorHandler(queryProductSchema, "query"),
+  async (req, res, next) => {
+    try {
+      const products = await service.find(req.query);
+      res.json(products);
+    } catch (e) {
+      next(e);
+    }
 });
 
 // Específico
