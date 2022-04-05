@@ -1,57 +1,41 @@
-const faker = require("faker");
 const boom = require("@hapi/boom");
 
-const sequelize = require("../libs/sequelize");
+const { models } = require("../libs/sequelize");
 
 class ProductsService {
-  constructor() {
-    this.productsList = [];
-    this.generate();
-  }
+  constructor() {}
 
-  generate() {
-    const limit = 50;
-    // generando informacion aleatoria
-    for (let index = 0; index < limit; index++) {
-      this.productsList.push({
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl(),
-        isBlock: faker.random.boolean(),
-      });
-    }
-  }
-
+  // crear un producto
   async create(data) {
-    const query = `INSERT INTO tasks (t_name, description) VALUES ('${data.t_name}', '${data.description}')`;
-    const product = await this.pool.query(query);
-
-    return product.rows[0];
+    const newProduct = await models.Product.create(data);
+    return newProduct;
   }
 
   async find() {
-    const query = 'SELECT * FROM tasks';
-    const [products, metadata] = await sequelize.query(query);
+    const products = await models.Product.findAll({
+      include: ["category"],
+    });
     return products;
   }
 
   async findOne(id) {
-    const query = `SELECT * FROM tasks WHERE id = '${id}'`;
-    const product = await this.pool.query(query);
-    return product.rows[0];
+    const product = await models.Product.findByPk(id);
+    if (!product) {
+      throw boom.notFound("Product not found");
+    }
+    return product;
   }
 
   async update(id, changes) {
-    const query = `UPDATE tasks SET name = '${changes.name}' WHERE id = '${id}'`;
-    const product = await this.pool.query(query);
-    return product.rows[0];
+    const product = await this.findOne(id);
+    const productUpdated = await product.update(changes);
+    return productUpdated;
   }
 
   async delete(id) {
-    const query = `DELETE FROM tasks WHERE id = '${id}'`;
-    const product = await this.pool.query(query);
-    return product.rows[0];
+    const product = await this.findOne(id);
+    await product.destroy(id);
+    return { id };
   }
 }
 
