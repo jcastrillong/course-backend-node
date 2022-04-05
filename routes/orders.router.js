@@ -5,7 +5,7 @@ const OrdersService = require("../services/orders.service");
 // requiriendo el middleware
 const validatorHandler = require("../middlewares/validator.handler");
 // requiriendo el schema
-const { createOrderSchema, updateOrderSchema, getOrderSchema } = require("../schemas/orders.schema");
+const { createOrderSchema, updateOrderSchema, getOrderSchema, addItemSchema } = require("../schemas/orders.schema");
 
 // inicializando el router
 const router = Router();
@@ -38,6 +38,21 @@ router.post("/",
       res.status(201).json({
         message: "Created",
         data: newOrder,
+      });
+    } catch (e) {
+      next(e);
+    }
+});
+
+router.post("/add-item", 
+  validatorHandler(addItemSchema, "body"),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newItem = await service.addItem(body);
+      res.status(201).json({
+        message: "Created",
+        data: newItem,
       });
     } catch (e) {
       next(e);
