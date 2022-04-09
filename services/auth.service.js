@@ -22,7 +22,7 @@ class AuthService {
     return user;
   }
 
-  ignToken(user) {
+  signToken(user) {
     const payload = {
       sub: user.id,
       role: user.role,
@@ -34,27 +34,38 @@ class AuthService {
     };
   }
 
-  async sendMail(email) {
+  async sendRecovery(email) {
     const user = await service.findByEmail(email);
     if (!user) {
       throw boom.unauthorized();
     }
+    const payload = { sub: user.id };
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: "15min" });
+    const link = `http://myfrontend.com/recovery?token=${token}`;
+    console.log(user.email);
+    const mail = {
+      from: config.smtpEmail, // sender address
+      to: `${user.email}`, // list of receivers
+      subject: "Email para recuperar contraseña", // Subject line
+      html: `<b>Ingresa a este link => ${link}</b>`, // html body
+    };
+    
+    const rta = await this.sendMail(mail);
+    await service.update(user.id, { recoveryToken: token });
+    return rta;
+  }
+
+  async sendMail(infoMail) {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       secure: true, // true for 465, false for other ports
       port: 465,
       auth: {
-        user: "jcastrillon022@gmail.com",
-        pass: config.authPassword,
+        user: config.smtpEmail,
+        pass: config.smtpPassword,
       },
     });
-    await transporter.sendMail({
-      from: "jcastrillon022@gmail.com", // sender address
-      to: `${user.email}`, // list of receivers
-      subject: "Este es un nuevo correo", // Subject line
-      text: "Hola, Buenas", // plain text body
-      html: "<b>Hola, Buenas</b>", // html body
-    });
+    await transporter.sendMail(infoMail);
     return { message: "Mail sent" };
   }
 }
