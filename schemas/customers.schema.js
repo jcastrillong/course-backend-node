@@ -16,6 +16,7 @@ const createCustomerSchema = Joi.object({
     email: email.required(),
     password: password.required(),
   }),
+  userId: userId,
 });
 
 const updateCustomerSchema = Joi.object({

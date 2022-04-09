@@ -7,18 +7,24 @@ class CustomerService {
   constructor() {}
 
   async create(data) {
-    const hash = await bcrypt.hash(data.user.password, 10);
-    const newData = {
-      ...data,
-      user: {
-        ...data.user,
-        password: hash,
-      },
-    };
-    const newCustomer = await models.Customer.create(newData, {
-      include: ["user"],
-    });
-    delete newCustomer.user.dataValues.password;
+    let newCustomer = {};
+    if (data.user) {
+      const hash = await bcrypt.hash(data.user.password, 10);
+
+      const newData = {
+        ...data,
+        user: {
+          ...data.user,
+          password: hash,
+        },
+      };
+      newCustomer = await models.Customer.create(newData, {
+        include: ["user"],
+      });
+      delete newCustomer.user.dataValues.password;
+    } else if (data.userId) {
+      newCustomer = await models.Customer.create(data);
+    }
     return newCustomer;
   }
 

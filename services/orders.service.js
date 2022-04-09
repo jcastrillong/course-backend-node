@@ -17,6 +17,21 @@ class OrdersService {
     return newItem;
   }
 
+  async findByUser(userId) {
+    const orders = await models.Order.findAll({
+      where: {
+        "$customer.user.id$": userId,
+      },
+      include: [
+        {
+          association: "customer",
+          include: ["user"],
+        },
+      ],
+    });
+    return orders;
+  }
+
   // obtener todas las ordenes
   async find() {
     const orders = await models.Order.findAll();
@@ -32,7 +47,7 @@ class OrdersService {
           include: ["user"],
         },
         "items",
-      ]
+      ],
     });
     if (!order) {
       throw boom.notFound("Order not found");
