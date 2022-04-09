@@ -19,6 +19,8 @@ const port = process.env.PORT || 3000; // Definiendo un puerto donde correrá el
 app.use(express.json());
 app.use(cors());
 
+require("./utils/auth");
+
 // Rutas
 app.get("/", (req, res) => {
   res.send("Bienvenido a mi API");
