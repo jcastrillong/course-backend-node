@@ -15,7 +15,7 @@ class CustomerService {
         password: hash,
       },
     };
-    const newCustomer = await models.Customer.create(data, {
+    const newCustomer = await models.Customer.create(newData, {
       include: ["user"],
     });
     delete newCustomer.user.dataValues.password;

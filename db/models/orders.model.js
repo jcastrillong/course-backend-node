@@ -30,12 +30,14 @@ const OrderSchema = {
   total: {
     type: DataTypes.VIRTUAL,
     get() {
-      if (this.items.length > 0) {
-        return this.items.reduce((acc, item) => {
-          return acc + (item.price * item.OrderProduct.amount);
-        }, 0);
+      if (this.items) {
+        if (this.items.length > 0) {
+          return this.items.reduce((acc, item) => {
+            return acc + item.price * item.OrderProduct.amount;
+          }, 0);
+        }
+        return 0;
       }
-      return 0;
     },
   },
 };

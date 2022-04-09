@@ -11,4 +11,4 @@ const JwtStrategy = new Strategy(options, (payload, done) => {
   return done(null, payload);
 });
 
-module.exports = JwtStrategy
+module.exports = JwtStrategy;
