@@ -1,4 +1,5 @@
 const boom = require("@hapi/boom");
+const bcrypt = require("bcrypt");
 
 const { models } = require("./../libs/sequelize");
 
@@ -6,7 +7,16 @@ class UsersService {
   constructor() {}
 
   async create(body) {
-    const newUser = await models.User.create(body);
+    const hash = await bcrypt.hash(body.password, 10);
+    const newUser = await models.User.create({
+      ...body,
+      password: hash,
+    });
+    /* no se debe devolver la contraseña a la hora de retornar
+    los datos, por eso se elimina antes de retornarse pero,
+    como se usa sequelize los valores vienen en dataValues
+     */
+    delete newUser.dataValues.password;
     return newUser;
   }
 
@@ -19,7 +29,7 @@ class UsersService {
 
   async findOne(id) {
     const user = await models.User.findByPk(id);
-    if(!user) {
+    if (!user) {
       throw boom.notFound("User not found");
     }
     return user;
