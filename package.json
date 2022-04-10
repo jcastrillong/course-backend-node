@@ -8,7 +8,8 @@
     "start": "node index.js",
     "migrations:generate": "sequelize-cli migration:generate --name",
     "migrations:run": "sequelize-cli db:migrate",
-    "migrations:revert": "sequelize-cli db:migrate:undo"
+    "migrations:revert": "sequelize-cli db:migrate:undo",
+    "migrations:delete": "sequielize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "Jhonatan Castrillon <jhonatancastrillon34@gmail.com>",
