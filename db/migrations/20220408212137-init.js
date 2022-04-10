@@ -1,4 +1,5 @@
 "use strict";
+const { DataTypes } = require("sequelize");
 
 // traer los modelos
 const { USER_TABLE } = require("../models/users.model");
@@ -9,7 +10,7 @@ const { ORDER_TABLE } = require("../models/orders.model");
 const { ORDER_PRODUCT_TABLE } = require("../models/order-product.model");
 
 module.exports = {
-  async up(queryInterface) {
+  async up(queryInterface, Sequelize) {
     // crear la tabla users
     await queryInterface.createTable(USER_TABLE, {
       id: {
