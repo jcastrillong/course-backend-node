@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
+    "lint": "eslint . --fix",
     "migrations:generate": "sequelize-cli migration:generate --name",
     "migrations:run": "sequelize-cli db:migrate",
     "migrations:revert": "sequelize-cli db:migrate:undo",
@@ -20,7 +21,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "faker": "^5.5.3",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
@@ -34,6 +34,12 @@
     "sequelize-cli": "^6.4.1"
   },
   "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-standard": "^5.0.0",
     "nodemon": "^2.0.15"
   },
   "engines": {

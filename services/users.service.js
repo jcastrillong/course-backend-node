@@ -1,58 +1,56 @@
-const boom = require("@hapi/boom");
-const bcrypt = require("bcrypt");
+const boom = require('@hapi/boom')
+const bcrypt = require('bcrypt')
 
-const { models } = require("./../libs/sequelize");
+const { models } = require('./../libs/sequelize')
 
 class UsersService {
-  constructor() {}
-
-  async create(body) {
-    const hash = await bcrypt.hash(body.password, 10);
+  async create (body) {
+    const hash = await bcrypt.hash(body.password, 10)
     const newUser = await models.User.create({
       ...body,
-      password: hash,
-    });
+      password: hash
+    })
     /* no se debe devolver la contraseña a la hora de retornar
     los datos, por eso se elimina antes de retornarse pero,
     como se usa sequelize los valores vienen en dataValues
      */
-    delete newUser.dataValues.password;
-    return newUser;
+    delete newUser.dataValues.password
+    return newUser
   }
 
-  async find() {
+  async find () {
     const users = await models.User.findAll({
-      include: ["customer"],
-    });
-    return users;
+      include: ['customer']
+    })
+    return users
   }
 
-  async findByEmail(email) {
+  async findByEmail (email) {
     const user = await models.User.findOne({
-      where: { email },
-    });
-    return user;
+      where: { email }
+    })
+    return user
   }
 
-  async findOne(id) {
-    const user = await models.User.findByPk(id);
+  async findOne (id) {
+    const user = await models.User.findByPk(id)
     if (!user) {
-      throw boom.notFound("User not found");
+      throw boom.notFound('User not found')
     }
-    return user;
+    return user
   }
 
-  async update(id, changes) {
-    const user = await this.findOne(id);
-    const userUpdated = await user.update(changes);
-    return userUpdated;
+  async update (id, changes) {
+    const user = await this.findOne(id)
+    const userUpdated = await user.update(changes)
+    return userUpdated
   }
 
-  async delete(id) {
-    const user = await this.findOne(id);
-    await user.destroy(id);
-    return { id };
+  async delete (id) {
+    const user = await this.findOne(id)
+    await user.destroy(id)
+    return { id }
   }
 }
 
-module.exports = UsersService;
+module.exports = UsersService

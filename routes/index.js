@@ -1,24 +1,24 @@
-const { Router } = require("express");
-const productsRouter = require("./products.router");
-const usersRouter = require("./users.router");
-const categoriesRouter = require("./categories.router");
-const customersRouter = require("./customers.router");
-const ordersRouter = require("./orders.router");
-const authRouter = require("./auth.router");
-const profileRouter = require("./profile.router");
+const { Router } = require('express')
+const productsRouter = require('./products.router')
+const usersRouter = require('./users.router')
+const categoriesRouter = require('./categories.router')
+const customersRouter = require('./customers.router')
+const ordersRouter = require('./orders.router')
+const authRouter = require('./auth.router')
+const profileRouter = require('./profile.router')
 
-function routerApi(app) {
-  const router = Router();
+function routerApi (app) {
+  const router = Router()
 
-  app.use("/api", router);
+  app.use('/api', router)
 
-  router.use("/products", productsRouter);
-  router.use("/customers", customersRouter);
-  router.use("/users", usersRouter);
-  router.use("/categories", categoriesRouter);
-  router.use("/orders", ordersRouter);
-  router.use("/auth", authRouter);
-  router.use("/profile", profileRouter);
+  router.use('/products', productsRouter)
+  router.use('/customers', customersRouter)
+  router.use('/users', usersRouter)
+  router.use('/categories', categoriesRouter)
+  router.use('/orders', ordersRouter)
+  router.use('/auth', authRouter)
+  router.use('/profile', profileRouter)
 }
 
-module.exports = routerApi;
+module.exports = routerApi

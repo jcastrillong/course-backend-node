@@ -1,8 +1,8 @@
-require("dotenv").config();
+require('dotenv').config()
 
 const config = {
-  env: process.env.NODE_ENV || "dev",
-  isProd: process.env.NODE_ENV === "production",
+  env: process.env.NODE_ENV || 'dev',
+  isProd: process.env.NODE_ENV === 'production',
   port: process.env.PORT || 3000,
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
@@ -13,7 +13,7 @@ const config = {
   apiKey: process.env.API_KEY,
   jwtSecret: process.env.JWT_SECRET,
   smtpEmail: process.env.SMTP_EMAIL,
-  smtpPassword: process.env.SMTP_PASSWORD,
-};
+  smtpPassword: process.env.SMTP_PASSWORD
+}
 
-module.exports = { config };
+module.exports = { config }

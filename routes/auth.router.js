@@ -1,43 +1,43 @@
-const { Router } = require("express");
-const passport = require("passport");
+const { Router } = require('express')
+const passport = require('passport')
 
-const AuthService = require("./../services/auth.service");
+const AuthService = require('./../services/auth.service')
 
-const router = Router();
-const service = new AuthService();
+const router = Router()
+const service = new AuthService()
 
 router.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
+  '/login',
+  passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
-      const user = req.user;
-      delete user.dataValues.recoveryToken;
-      res.json(service.signToken(user));
+      const user = req.user
+      delete user.dataValues.recoveryToken
+      res.json(service.signToken(user))
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
-);
+)
 
-router.post("/recovery", async (req, res, next) => {
+router.post('/recovery', async (req, res, next) => {
   try {
-    const { email } = req.body;
-    const rta = await service.sendRecovery(email);
-    res.json(rta);
+    const { email } = req.body
+    const rta = await service.sendRecovery(email)
+    res.json(rta)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-router.post("/change-password", async (req, res, next) => {
+router.post('/change-password', async (req, res, next) => {
   try {
-    const { token, newPassword } = req.body;
-    const rta = await service.changePassword(token, newPassword);
-    res.json(rta);
+    const { token, newPassword } = req.body
+    const rta = await service.changePassword(token, newPassword)
+    res.json(rta)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-module.exports = router;
+module.exports = router

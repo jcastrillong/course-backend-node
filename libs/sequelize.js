@@ -1,23 +1,23 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize')
 
-const { config } = require("../config/config");
-const setupModels = require("../db/models/index");
+const { config } = require('../config/config')
+const setupModels = require('../db/models/index')
 
 const options = {
-  dialect: "postgres",
-  logging: config.isProd ? false : true,
-};
+  dialect: 'postgres',
+  logging: !config.isProd
+}
 
 if (config.isProd) {
   options.dialectOptions = {
     ssl: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: false
     }
   }
 }
 
-const sequelize = new Sequelize(config.dbUrl, options);
+const sequelize = new Sequelize(config.dbUrl, options)
 
-setupModels(sequelize);
+setupModels(sequelize)
 
-module.exports = sequelize;
+module.exports = sequelize

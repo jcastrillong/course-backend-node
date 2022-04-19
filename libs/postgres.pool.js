@@ -1,24 +1,24 @@
-const { Pool } = require("pg");
+const { Pool } = require('pg')
 
-const { config } = require("../config/config");
+const { config } = require('../config/config')
 
 const options = {
-  connectionString: URI,
+  connectionString: URI
 }
 
 if (config.isProd) {
-  URI = config.dbUrl;
+  URI = config.dbUrl
   options.connectionString = config.dbUrl,
   options.ssl = {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false
   }
 } else {
-  const USER = encodeURIComponent(config.dbUser);
-  const PASSWORD = encodeURIComponent(config.dbPassword);
-  const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
-  options.connectionString = URI;
+  const USER = encodeURIComponent(config.dbUser)
+  const PASSWORD = encodeURIComponent(config.dbPassword)
+  const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`
+  options.connectionString = URI
 }
 
-const pool = new Pool(options);
+const pool = new Pool(options)
 
-module.exports = pool;
+module.exports = pool
